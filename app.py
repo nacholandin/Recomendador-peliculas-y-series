@@ -2,6 +2,9 @@ import streamlit as st
 import plotly.express as px
 import numpy as np
 
+from eda import eda_app
+#from ml import ml_app
+from about import about_app
 
 def main():
     # st.set_page_config(**PAGE_CONFIG)
@@ -24,8 +27,15 @@ def main():
         st.write("""To use the `Machine Learning Model` section you can either use the sliders in the sidebar or upload you own CSV file.""")
 
         st.warning("""Note: If you are using a CSV file you cannot use the sidebar's sliders to use the model.""") 
+       
+    elif choice == "Exploratory Data Analysis":
+        eda_app()
 
+    elif choice == "Machine Learning Model":
+        ml_app()
 
+    else:
+        about_app()
 
 if __name__ == "__main__":
     main()
