@@ -3,13 +3,13 @@ import plotly.express as px
 from PIL import Image
 import numpy as np
 import os
-#from module.ml_func import
+from module.ml_func import *
 from eda import eda_app
-#from ml import ml_app
+from ml import ml_app
 from about import about_app
 
 def main():
-    # st.set_page_config(**PAGE_CONFIG)
+    st.set_page_config(**PAGE_CONFIG)
 
     menu = ["Main App", "Exploratory Data Analysis", "Machine Learning Model", "About"]
 
@@ -18,10 +18,10 @@ def main():
     if choice == "Main App":
         st.subheader(body = "Home :house:")
 
-        st.write("Welcome to the **CO2 Emissions Machine Learning Model Website** made with **Streamlit**.")
+        st.write(".")
 
         st.markdown("""The data for this project comes from the following website: 
-                       [Open Canada](https://open.canada.ca/data/en/dataset/98f1a129-f628-4ce4-b24d-6f16bf24dd64).""")
+                       """)
 
         st.write("""To use this app just go to the `Exploratory Data Analysis` section to know more about the data that we used to build
                     the Machine Learning models.""")
