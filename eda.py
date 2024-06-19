@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import folium
+import json
 from module.ml_func import * 
 
   
@@ -34,7 +36,7 @@ def eda_app():
                                          options =  platform_options,
                                          index = 0)
 
-    df_sidebar = df_sidebar[df_sidebar["platform"].isin(platform_options)] if platform_type != "All" else df_sidebar
+    df_sidebar = df_sidebar[df_sidebar["platform"] == platform_type] if platform_type != "All" else df_sidebar
     
     ## Genre
     # categorias_unicas = set()
@@ -48,7 +50,9 @@ def eda_app():
                                          options = genre_options,
                                          index   = 0)
 
-    df_sidebar = df_sidebar[df_sidebar["Genre"].isin(genre_options)] if genre_type != "All" else df_sidebar
+    if genre_type != "All":
+        df_sidebar = df_sidebar[df_sidebar['genres'].apply(lambda x: genre_type in x.split(", "))]
+    
 
     df_sidebar.reset_index(drop = True, inplace = True)
     
@@ -56,6 +60,7 @@ def eda_app():
         st.dataframe(df_sidebar)
         st.write(f"DataFrame dimensions: {df_sidebar.shape[0]}x{df_sidebar.shape[1]}")
 
+    
     col1, col2 = st.columns([1, 1])
 
     # # fig1
@@ -141,8 +146,8 @@ def eda_app():
     # fig8
 
     top = df_sidebar.sort_values(by='imdb_score', ascending=False)
-    fig8 = px.bar(top.head(10), x='title', y='imdb_score',color= 'title', title="Peliculas /Series con Mayor Valoracion", labels={'title': 'Title', 'imdb_score': 'puntacion'})
-    fig8.update_layout(width=1200, height=700)
+    fig8 = px.bar(top.head(12), x='title', y='imdb_score',color= 'title', title="Peliculas /Series con Mayor Valoracion", labels={'title': 'Title', 'imdb_score': 'puntacion'})
+    fig8.update_layout(width=1000, height=700)
 
     #fig9
 
@@ -180,6 +185,27 @@ def eda_app():
     width=1200,
     height=600)
 
+    #fig11
+
+    # paises = df_sidebar['production_countries'].str.split(', ', expand=True).stack().reset_index(level=1, drop=True).reset_index(name='pais')
+    # value_counts = paises['pais'].value_counts(dropna = False)
+    # df_paises_total = value_counts.reset_index()
+    # df_paises_total.columns = ['pais', 'total']
+    # df_paises_total['pais_completo'] = df_paises_total['pais'].replace(abreviaciones_a_nombres)
+    # df_paises_total['Total_log'] = df_paises_total['total'].apply(np.log)
+
+    # world_geo = "source/world_countries.json" # Archivo GeoJSON
+
+    # world_map = folium.Map(location = [0, 0], zoom_start = 2)
+
+    # folium.Choropleth(geo_data = world_geo,
+    #               data     = df_paises_total,
+    #               columns  = ["pais_completo", "Total_log"],
+    #               fill_color   = "YlGn",
+    #               key_on   = "feature.properties.name").add_to(world_map)
+
+    # world_map
+
 
     
     
@@ -195,7 +221,7 @@ def eda_app():
     st.plotly_chart(figure_or_data = fig8, use_container_width = True)
     st.plotly_chart(figure_or_data = fig9, use_container_width = True)
     st.plotly_chart(figure_or_data = fig10, use_container_width = True)
-
+    #st.folium(figure_or_data = world_map, use_container_width = True)
     
 
 
