@@ -16,12 +16,12 @@ def eda_app():
 
     st.sidebar.markdown("*"*10)
     
-    st.sidebar.markdown("Select `type`, `platform` and `genres` to explore the data.")
+    st.sidebar.markdown("Selecciona `type`, `platform` y `genres` para explorar los datos y las gráficas.")
 
     df = read_data()
 
     # SIDEBAR
-    df_sidebar = df.sort_values(by = "title").copy()
+    df_sidebar = df.sort_values(by = "release_year").copy()
 
     ### Model Type
     model_type_options = ["All"] + list(df_sidebar["type"].unique())
@@ -148,20 +148,20 @@ def eda_app():
 
     mayor_votos = df_sidebar.sort_values(by='imdb_votes', ascending=False)
 
-    fig7 = px.bar(mayor_votos.head(10), x='title', y='imdb_votes',color= 'title', title="Peliculas/Series con mayor cantidad de votos", labels={'title': 'Title', 'imdb_votes': 'Votos'})
+    fig7 = px.bar(mayor_votos.head(10), x='title', y='imdb_votes',color= 'title', title="Peliculas/Series con mayor cantidad de votos usuarios Imdb", labels={'title': 'Title', 'imdb_votes': 'Votos'})
     fig7.update_layout(width=1000, height=600)
 
     # fig8
 
     top = df_sidebar.sort_values(by='imdb_score', ascending=False)
-    fig8 = px.bar(top.head(12), x='title', y='imdb_score',color= 'title', title="Peliculas /Series con Mayor Valoracion", labels={'title': 'Title', 'imdb_score': 'puntacion'})
+    fig8 = px.bar(top.head(12), x='title', y='imdb_score',color= 'title', title="Peliculas /Series con Mayor Valoracion usuarios Imdb", labels={'title': 'Title', 'imdb_score': 'puntacion'})
     fig8.update_layout(width=1000, height=700)
 
     #fig9
 
     peliculas_por_ano = df_sidebar['release_year'].value_counts().sort_index().reset_index()
     peliculas_por_ano.columns = ['release_year', 'count']
-    fig9 = px.line(peliculas_por_ano, x='release_year', y='count', title='Tendencia en el Número de Películas por Año')
+    fig9 = px.line(peliculas_por_ano, x='release_year', y='count', title='Tendencia en el Número de Películas/Series por Año')
     fig9.update_layout(xaxis_title='Año de Lanzamiento', yaxis_title='Número de Películas')
 
     #fig10
@@ -205,24 +205,29 @@ def eda_app():
                   columns  = ["pais_completo", "Total_log"],
                   fill_color   = "YlGn",
                   key_on   = "feature.properties.name").add_to(world_map)
-
-
-
     
+    #fig12
     
+    shows = df_sidebar.sort_values(by='seasons', ascending=False).head(10)
+    fig12 = px.bar(shows, x='title', y='seasons',color= 'title', title="Seires Más Temporadas", labels={'title': 'Title', 'seasons': 'seasons'})
+    fig12.update_layout(width=1200, height=600)
+
+
+
     # Plots
 
     col1.plotly_chart(figure_or_data = fig1, use_container_width = True)
-    st.plotly_chart(figure_or_data = fig2, use_container_width = True)
     st.plotly_chart(figure_or_data = fig3, use_container_width = True)
+    st.plotly_chart(figure_or_data = fig10, use_container_width = True)
     st.plotly_chart(figure_or_data = fig4, use_container_width = True)
     st.plotly_chart(figure_or_data = fig5, use_container_width = True)
     st.plotly_chart(figure_or_data = fig6, use_container_width = True)
     st.plotly_chart(figure_or_data = fig7, use_container_width = True)
     st.plotly_chart(figure_or_data = fig8, use_container_width = True)
+    st.plotly_chart(figure_or_data = fig2, use_container_width = True)
+    st.plotly_chart(figure_or_data = fig12, use_container_width = True)
     st.plotly_chart(figure_or_data = fig9, use_container_width = True)
-    st.plotly_chart(figure_or_data = fig10, use_container_width = True)
-    
+    st.write("Mapa paises de producción")
     folium_static(fig = world_map, width = 1000)
     
 

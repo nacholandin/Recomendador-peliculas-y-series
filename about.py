@@ -3,7 +3,7 @@ import streamlit as st
 
 def about_app():
 
-    st.header("ABOUT US")
+    st.header("SOBRE NOSOTROS")
     
     st.subheader("MIEMBROS DEL EQUIPO")
 

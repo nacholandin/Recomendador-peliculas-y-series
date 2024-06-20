@@ -8,15 +8,17 @@ from eda import eda_app
 from ml import ml_app
 from about import about_app
 from datos import datos_app
+from informacion import informacion_app
+
 
 def main():
     st.set_page_config(**PAGE_CONFIG)
 
-    menu = ["Main App", "Datos", "Exploratory Data Analysis", "Machine Learning Model", "About"]
+    menu = ["Inicio", "Datos", "Exploratory Data Analysis", "Modelo Recomendador", "Información", "Sobre Nosotros"]
 
     choice = st.sidebar.selectbox(label = "Menu", options = menu, index = 0)
  
-    if choice == "Main App":
+    if choice == "Inicio":
         st.header(body = "Introducción")
 
         st.subheader("Proyecto final para Hack a Boss")
@@ -47,8 +49,11 @@ def main():
     elif choice == "Exploratory Data Analysis":
         eda_app()
 
-    elif choice == "Machine Learning Model":
+    elif choice == "Modelo Recomendador":
         ml_app()
+
+    elif choice == "Información":
+        informacion_app()
 
     else:
         about_app()
