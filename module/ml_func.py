@@ -6,31 +6,11 @@ import pickle
 import base64
 #import sklearn
 
-PAGE_CONFIG = {"page_title"             : "Recomendator Shows and Movies Model - Streamlit"}
-                # "page_icon"             : ":film:",
-                # "layout"                : "wide",
+PAGE_CONFIG = {"page_title"             : "Recomendator Shows and Movies Model - Streamlit",
+                # "page_icon"             : ":film:",   
+                 "layout"                : "wide"}
                 # "initial_sidebar_state" : "expanded"}
 
-categorias_unicas = list(['horror',
- 'action',
- 'music',
- 'crime',
- 'animation',
- 'fantasy',
- 'western',
- 'scifi',
- 'comedy',
- 'reality',
- 'sport',
- 'drama',
- 'war',
- 'thriller',
- 'history',
- 'european',
- 'documentation',
- 'desconocido',
- 'romance',
- 'family'])
 
 abreviaciones_a_nombres = {
     'US': 'United States of America',

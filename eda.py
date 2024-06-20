@@ -5,8 +5,7 @@ import plotly.express as px
 import folium
 import json
 from module.ml_func import * 
-
-  
+from streamlit_folium import folium_static  
 
 
 def eda_app():
@@ -23,35 +22,42 @@ def eda_app():
     df_sidebar = df.sort_values(by = "title").copy()
 
     ### Model Type
-    model_type_options = ["All"] + list(df["type"].unique())
+    model_type_options = ["All"] + list(df_sidebar["type"].unique())
     model_type = st.sidebar.selectbox(label   = "Select type:",
                                       options = model_type_options,
                                       index   = 0)
     
-    df_sidebar = df_sidebar[df_sidebar["type"] == model_type] if model_type != "All" else df_sidebar
+
+    if model_type != "All":
+        df_sidebar = df_sidebar[df_sidebar["type"] == model_type]
+
 
     ### Platform
-    platform_options = ["All"] + list(df["platform"].unique())
-    platform_type = st.sidebar.selectbox(label   = "Select platform:",
+    platform_options = ["All"] + list(df_sidebar["platform"].unique())
+    platform_type = st.sidebar.multiselect(label   = "Select platform:",
                                          options =  platform_options,
-                                         index = 0)
+                                         default = ["All"])
+    
+    if "All" in platform_type:
+        df_sidebar = df_sidebar  # Si "All" está seleccionado, mostrar todos los datos
+    else:
+        df_sidebar = df_sidebar[df_sidebar["platform"].isin(platform_type)]
 
-    df_sidebar = df_sidebar[df_sidebar["platform"] == platform_type] if platform_type != "All" else df_sidebar
     
     ## Genre
-    # categorias_unicas = set()
-    # for genero in df_sidebar['genres'].values:
-    #     generos = genero.split(", ")
-    #     categorias_unicas.update(generos)
-    # categorias_unicas = list(categorias_unicas)
+    categorias_unicas = set()
+    for genero in df_sidebar['genres'].dropna().values:
+        generos = genero.split(", ")
+        categorias_unicas.update(generos)
+    categorias_unicas = list(categorias_unicas)
     
     genre_options = ["All"] + categorias_unicas
-    genre_type = st.sidebar.selectbox(label   = "Select genre:",
+    genre_type = st.sidebar.multiselect(label   = "Select genre:",
                                          options = genre_options,
-                                         index   = 0)
+                                         default   = ["All"])
 
-    if genre_type != "All":
-        df_sidebar = df_sidebar[df_sidebar['genres'].apply(lambda x: genre_type in x.split(", "))]
+    if "All" not in genre_type:
+        df_sidebar = df_sidebar[df_sidebar['genres'].apply(lambda x: any(g in genre_type for g in x.split(", ")))]
     
 
     df_sidebar.reset_index(drop = True, inplace = True)
@@ -159,12 +165,6 @@ def eda_app():
     #fig10
 
     df_sidebar['genres'] = df_sidebar['genres'].str.replace(r'[','').str.replace(r"'",'').str.replace(r']','')
-    # categorias_unicas = set()
-    # for genero in df_sidebar['genres'].values:
-    #     generos = genero.split(", ")
-    #     categorias_unicas.update(generos)
-
-    # categorias_unicas = list(categorias_unicas)
     df_sidebar['genres'] = df_sidebar['genres'].replace('', np.nan)
     generos = df_sidebar['genres'].str.split(', ', expand=True).stack().reset_index(level=1, drop=True).reset_index(name='genero')
     generos['genero'].value_counts(dropna = False)
@@ -187,24 +187,23 @@ def eda_app():
 
     #fig11
 
-    # paises = df_sidebar['production_countries'].str.split(', ', expand=True).stack().reset_index(level=1, drop=True).reset_index(name='pais')
-    # value_counts = paises['pais'].value_counts(dropna = False)
-    # df_paises_total = value_counts.reset_index()
-    # df_paises_total.columns = ['pais', 'total']
-    # df_paises_total['pais_completo'] = df_paises_total['pais'].replace(abreviaciones_a_nombres)
-    # df_paises_total['Total_log'] = df_paises_total['total'].apply(np.log)
+    paises = df_sidebar['production_countries'].str.split(', ', expand=True).stack().reset_index(level=1, drop=True).reset_index(name='pais')
+    value_counts = paises['pais'].value_counts(dropna = False)
+    df_paises_total = value_counts.reset_index()
+    df_paises_total.columns = ['pais', 'total']
+    df_paises_total['pais_completo'] = df_paises_total['pais'].replace(abreviaciones_a_nombres)
+    df_paises_total['Total_log'] = df_paises_total['total'].apply(np.log)
 
-    # world_geo = "source/world_countries.json" # Archivo GeoJSON
+    world_geo = "source/world_countries.json" # Archivo GeoJSON
 
-    # world_map = folium.Map(location = [0, 0], zoom_start = 2)
+    world_map = folium.Map(location = [0, 0], zoom_start = 2)
 
-    # folium.Choropleth(geo_data = world_geo,
-    #               data     = df_paises_total,
-    #               columns  = ["pais_completo", "Total_log"],
-    #               fill_color   = "YlGn",
-    #               key_on   = "feature.properties.name").add_to(world_map)
+    folium.Choropleth(geo_data = world_geo,
+                  data     = df_paises_total,
+                  columns  = ["pais_completo", "Total_log"],
+                  fill_color   = "YlGn",
+                  key_on   = "feature.properties.name").add_to(world_map)
 
-    # world_map
 
 
     
@@ -221,7 +220,8 @@ def eda_app():
     st.plotly_chart(figure_or_data = fig8, use_container_width = True)
     st.plotly_chart(figure_or_data = fig9, use_container_width = True)
     st.plotly_chart(figure_or_data = fig10, use_container_width = True)
-    #st.folium(figure_or_data = world_map, use_container_width = True)
+    
+    folium_static(fig = world_map, width = 1000)
     
 
 
