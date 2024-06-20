@@ -86,7 +86,7 @@ def eda_app():
 
     duration = df_sidebar.sort_values(by='runtime', ascending=False).head(10)
     fig2 = px.bar(duration, x='title', y='runtime',color= 'title', title="Peliculas/Series Mayor Duración", labels={'title': 'Title', 'runtime': 'Minutos'})
-    fig2.update_layout()
+    fig2.update_layout(width=1200, height=600)
      
     
 
