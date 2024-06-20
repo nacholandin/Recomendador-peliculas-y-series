@@ -10,7 +10,9 @@ from streamlit_folium import folium_static
 
 def eda_app():
 
-    st.subheader(body = "Exploratory Data Analysis :chart:")
+    st.subheader(body = "Exploratory Data Analysis")
+
+    st.write("En esta sección puedes realizar un análisis más detallado de los datos a través de gráficos y visualizaciones.")
 
     st.sidebar.markdown("*"*10)
     

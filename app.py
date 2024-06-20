@@ -16,7 +16,7 @@ def main():
     choice = st.sidebar.selectbox(label = "Menu", options = menu, index = 0)
 
     if choice == "Main App":
-        st.subheader(body = "Home :house:")
+        st.subheader(body = "")
 
         st.write(".")
 
