@@ -84,9 +84,9 @@ def eda_app():
 
      # fig2
 
-    plataform_counts = df_sidebar['platform'].value_counts().reset_index()
-    plataform_counts.columns = ['platform', 'count']
-    fig2 = px.bar(plataform_counts, x='platform', y='count',color= 'platform', title="Platform", labels={'platform': 'Platform', 'count': 'Count'})
+    duration = df_sidebar.sort_values(by='runtime', ascending=False).head(10)
+    fig2 = px.bar(duration, x='title', y='runtime',color= 'title', title="Peliculas/Series Mayor Duración", labels={'title': 'Title', 'runtime': 'Minutos'})
+    fig2.update_layout()
      
     
 
@@ -213,7 +213,7 @@ def eda_app():
     # Plots
 
     col1.plotly_chart(figure_or_data = fig1, use_container_width = True)
-    col2.plotly_chart(figure_or_data = fig2, use_container_width = True)
+    st.plotly_chart(figure_or_data = fig2, use_container_width = True)
     st.plotly_chart(figure_or_data = fig3, use_container_width = True)
     st.plotly_chart(figure_or_data = fig4, use_container_width = True)
     st.plotly_chart(figure_or_data = fig5, use_container_width = True)

@@ -188,6 +188,11 @@ def read_data():
     df['production_countries'] = df['production_countries'].str.replace(r"[", '').str.replace(r"'", '').str.replace(r"]", '')
     df['production_countries'] = df['production_countries'].replace('', np.nan)
 
+    df.loc[df['title'] == 'once bitten', 'runtime'] = 94
+    df.loc[df['title'] == 'superfish', 'runtime'] = 52
+    df.loc[df['title'] == 'scenes from a marriage', 'runtime'] = 169
+    df.loc[df['title'] == 'chhote ustaad-precaution is better than cure', 'runtime'] = 123
+
 
     return df
 
