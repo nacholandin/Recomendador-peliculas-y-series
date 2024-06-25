@@ -1,9 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import os
-import pickle
-import base64
+
 #import sklearn
 
 PAGE_CONFIG = {"page_title"             : "Recomendator Shows and Movies Model - Streamlit",
@@ -195,14 +193,4 @@ def read_eda():
 
 
     return df
-
-def read_reco():
-    
-    return pd.read_csv('source/cartelera.csv')
-
-def generate_recommendations(valoraciones_df, df):
-    # Implementa tu lógica para generar recomendaciones basadas en las valoraciones
-    valoradas = valoraciones_df['title'].tolist()
-    recomendaciones = df[~df['title'].isin(valoradas)]['title'].tolist()
-    return recomendaciones[:5] 
 
