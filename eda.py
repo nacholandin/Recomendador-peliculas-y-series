@@ -18,7 +18,7 @@ def eda_app():
     
     st.sidebar.markdown("Selecciona `type`, `platform` y `genres` para explorar los datos y las gráficas.")
 
-    df = read_data()
+    df = read_eda()
 
     # SIDEBAR
     df_sidebar = df.sort_values(by = "release_year").copy()

@@ -168,7 +168,7 @@ abreviaciones_a_nombres = {
     'ZM': 'Zambia'}
 
 #@st.cache_data
-def read_data():
+def read_eda():
 
     df = pd.read_csv("source/df.csv")
 
@@ -195,4 +195,14 @@ def read_data():
 
 
     return df
+
+def read_reco():
+    
+    return pd.read_csv('source/cartelera.csv')
+
+def generate_recommendations(valoraciones_df, df):
+    # Implementa tu lógica para generar recomendaciones basadas en las valoraciones
+    valoradas = valoraciones_df['title'].tolist()
+    recomendaciones = df[~df['title'].isin(valoradas)]['title'].tolist()
+    return recomendaciones[:5] 
 
