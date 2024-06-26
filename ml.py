@@ -51,16 +51,13 @@ def ml_app():
         #generacion de los pesos por genero de cada usuario#
             categorias_unicas = set()
             for genero in dfre['genres'].dropna().values:
-    # Limpiar las categorías eliminando corchetes, comillas y espacios innecesarios
                 generos = genero.strip("[]").replace("'", "").replace('"', "").split(", ")
                 generos = [g.strip().lower() for g in generos]
                 categorias_unicas.update(generos)
-
             categorias_unicas = list(categorias_unicas)
 
 # Crear la matriz de datos para las categorías
             datos = []
-
             for row in dfme[dfme["Rating"] > 0]['genres'].dropna().values:
                 categorias_peliculas = []
                 row_generos = row.strip("[]").replace("'", "").replace('"', "").split(", ")
@@ -73,15 +70,11 @@ def ml_app():
 
             df_generos_peliculas = pd.DataFrame(data = datos, columns = list(categorias_unicas))
             dfme.reset_index(drop=True, inplace=True)
-
             weighted_genre_matrix = pd.concat([dfme, df_generos_peliculas], axis = 1)
             weighted_genre_matrix = (weighted_genre_matrix[categorias_unicas].values.T * weighted_genre_matrix['Rating'].values).T
             weighted_genre_matrix = pd.DataFrame(weighted_genre_matrix, columns = categorias_unicas)
-
             usuario_pesos = weighted_genre_matrix.sum()
-
             usuario_pesos = usuario_pesos / usuario_pesos.sum()
-
             for genero in categorias_unicas:
                 if genero not in usuario_pesos:
                     usuario_pesos[genero] = 0.0000
@@ -108,22 +101,14 @@ def ml_app():
             directores = dfm2['director_ids'].unique().tolist()
 
             datos_directores = []
-
             for row in dfm2[dfm2["Rating"] > 0]["director_ids"].values:
-    
                 c_directores = []
-    
                 for director in directores :
-    
-
                     if director == row:
                         c_directores.append(1)  
                     else:
                         c_directores.append(0)  
-    
-
                 datos_directores.append(c_directores)
-
 
             df_directores = pd.DataFrame(data = datos_directores, columns = list(directores))
 
@@ -138,22 +123,14 @@ def ml_app():
 
     # generar dataframe columnas por cada director (en los pesos del usuario) y generar puntuacion por director
             datos_directores = []
-
             for row in dfre['director_ids'].values:
-    
                 c_directores = []
-    
                 for director in directores :
-    
-
                     if director == row:
                         c_directores.append(1)  
                     else:
                         c_directores.append(0)  
-    
-
                 datos_directores.append(c_directores)
-
 
             df_directores = pd.DataFrame(data=datos_directores, columns=list(directores))
             dfre3 = pd.concat([dfre, df_directores], axis=1)
@@ -166,10 +143,7 @@ def ml_app():
             for actor in dfme['actor_ids'].values:
                 actores = actor.split(", ")
                 actores_unicos.update(actores)
-
             actores_unicos = list(actores_unicos)
-
-
 
             datos = []
 
@@ -185,7 +159,6 @@ def ml_app():
                         actores_peliculas.append(0)
 
                 datos.append(actores_peliculas)
-
 
             df_actores_peliculas = pd.DataFrame(data = datos, columns = list(actores_unicos))
             dfme.reset_index(drop=True, inplace=True)
@@ -265,9 +238,7 @@ def ml_app():
                 else:
                     dfre['Puntuacion_des'] = 0
                     dfre['Puntuacion_des'] = dfre['Puntuacion_des'].astype(float)
-                    recommendations = get_recommendations(peliculas_5, similarity_matrix, dfre)
-            
-                
+                    recommendations = get_recommendations(peliculas_5, similarity_matrix, dfre) 
 
             dfre = dfre[~dfre['title'].isin(dfme['title'])]
             dfre = dfre.copy()
@@ -311,18 +282,12 @@ def ml_app():
             recomendaciones2 = dfres.sort_values(by='Puntuacion', ascending=False)
 
             st.write("Aquí tienes algunas recomendaciones de películas para ti:")
-            st.dataframe(recomendaciones1[['title']].head(6))
+            st.dataframe(recomendaciones1[['title', 'release_year', 'plataform']].head(6))
 
 
             st.write("Aquí tienes algunas recomendaciones de series para ti:")
-            st.dataframe(recomendaciones2[['title']].head(6))
+            st.dataframe(recomendaciones2[['title', 'release_year', 'plataform']].head(6))
     
-        # st.write("Aquí tienes algunas recomendaciones de películas para ti:")
-        # for i, rec in enumerate(recomendaciones):
-        #     st.write(f"{i+1}. {rec['title']} - Puntuación: {rec['Puntuacion']}")
-
-
-
 
 if __name__ == "__ml_app__":
     ml_app()

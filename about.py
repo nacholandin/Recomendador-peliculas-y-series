@@ -19,7 +19,5 @@ def about_app():
     
     st.markdown("Ignacio Landín García: Junior Data Scientist | Especialista en Inteligencia Artificial, Python, SQL y Machine Learning |Contable.")
 
-    
-
 if __name__ == "__about_app__":
     about_app()

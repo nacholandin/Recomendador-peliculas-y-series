@@ -2,14 +2,9 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-#import sklearn
-
-PAGE_CONFIG = {"page_title"             : "Recomendator Shows and Movies Model - Streamlit",
-                # "page_icon"             : ":film:",   
+PAGE_CONFIG = {"page_title"             : "Recomendator Shows and Movies Model - Streamlit",  
                  "layout"                : "wide"}
-                # "initial_sidebar_state" : "expanded"}
-
-
+                
 abreviaciones_a_nombres = {
     'US': 'United States of America',
     'GB': 'United Kingdom of Great Britain and Northern Ireland',
@@ -169,19 +164,12 @@ abreviaciones_a_nombres = {
 def read_eda():
 
     df = pd.read_csv("source/df.csv")
-
-    df.columns = ['id', 'title', 'type', 'description', 'release_year',
-       'age_certification', 'runtime', 'genres', 'production_countries',
-       'seasons', 'imdb_id', 'imdb_score', 'imdb_votes', 'tmdb_popularity',
-       'tmdb_score', 'actors', 'actor_ids', 'directors', 'director_ids',
-       'platform', 'titleyear']
     
     df = df.drop(['id', 'description','imdb_id','tmdb_popularity','tmdb_score','actor_ids','director_ids', 'titleyear'], axis=1)
 
     df['genres'] = df['genres'].str.replace(r'[','').str.replace(r"'",'').str.replace(r']','')
 
     df['genres'] = df['genres'].fillna('desconocido')
-
 
     df['production_countries'] = df['production_countries'].str.replace(r"[", '').str.replace(r"'", '').str.replace(r"]", '')
     df['production_countries'] = df['production_countries'].replace('', np.nan)
