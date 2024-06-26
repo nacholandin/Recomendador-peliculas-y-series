@@ -79,7 +79,7 @@ def ml_app():
                 if genero not in usuario_pesos:
                     usuario_pesos[genero] = 0.0000
 
-            factor_penalizacion = 0.7
+            factor_penalizacion = 0.85
             umbral_penalizacion = usuario_pesos.sort_values(ascending=False).iloc[3] 
             usuario_pesos_penalizados = usuario_pesos.apply(lambda x: (x - umbral_penalizacion) * factor_penalizacion if x < umbral_penalizacion else x)
             datos = []
@@ -117,7 +117,7 @@ def ml_app():
             weighted_genre_matrix2 = pd.DataFrame(weighted_genre_matrix2, columns = directores )
             usuario_d = weighted_genre_matrix2.sum()
             usuario_d = usuario_d / usuario_d.sum()
-            factor_penalizacion2 = 1.35
+            factor_penalizacion2 = 1.2
             umbral_penalizacion2 = usuario_d.sort_values(ascending=False).iloc[1] 
             usuario_dp = usuario_d.apply(lambda x:x * factor_penalizacion2 if x >= umbral_penalizacion2 else x)
 
@@ -247,16 +247,16 @@ def ml_app():
                 if row["type"] == "MOVIE":
                        
                         return (
-                            0.66 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
-                            0.15 * row["Puntuaciond"] / dfre["Puntuaciond"].max() +
-                            0.07 * row["Puntuacionac"] / dfre["Puntuacionac"].max()+
-                            0.12 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
+                            0.72 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
+                            0.12 * row["Puntuaciond"] / dfre["Puntuaciond"].max() +
+                            0.06 * row["Puntuacionac"] / dfre["Puntuacionac"].max()+
+                            0.10 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
             )
                 else:
                         return (
-                            0.7 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
-                            0.16 * row["Puntuacionac"] / dfre["Puntuacionac"].max()+
-                            0.14 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
+                            0.75 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
+                            0.13 * row["Puntuacionac"] / dfre["Puntuacionac"].max()+
+                            0.12 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
             )
 
             dfre["Puntuacion"] = dfre.apply(calcular_puntuacion, axis=1)
