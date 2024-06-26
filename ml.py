@@ -282,11 +282,11 @@ def ml_app():
             recomendaciones2 = dfres.sort_values(by='Puntuacion', ascending=False)
 
             st.write("Aquí tienes algunas recomendaciones de películas para ti:")
-            st.dataframe(recomendaciones1[['title', 'release_year', 'platform']].head(6))
+            st.dataframe(recomendaciones1[['title', 'platform']].head(6))
 
 
             st.write("Aquí tienes algunas recomendaciones de series para ti:")
-            st.dataframe(recomendaciones2[['title', 'release_year', 'platform']].head(6))
+            st.dataframe(recomendaciones2[['title', 'platform']].head(6))
     
 
 if __name__ == "__ml_app__":

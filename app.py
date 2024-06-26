@@ -20,8 +20,8 @@ def main():
  
     if choice == "Inicio":
         image = Image.open("source/Red and Blue Movie Night Poster (3).png")
-        # st.image(image           = image,
-        #           width=500)
+        st.image(image           = image,
+                   width=500)
         #     #   use_column_width = True)
         
         st.header(body = "Introducción")
