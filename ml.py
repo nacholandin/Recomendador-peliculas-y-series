@@ -186,74 +186,66 @@ def ml_app():
             dfre4 = pd.concat([dfre, df_actores_peliculas], axis=1)
             dfre["Puntuacionac"]=(dfre4[actores_unicos] * usuario_ac).sum(axis=1)
 
-            lemmatizer = WordNetLemmatizer()
-            stop_words = set(stopwords.words('english'))
+#             lemmatizer = WordNetLemmatizer()
+#             stop_words = set(stopwords.words('english'))
 
-            def preprocess_text(text):
-                if pd.isnull(text):
-                    return ""
-                tokens = word_tokenize(str(text).lower())
-                tokens = [lemmatizer.lemmatize(word) for word in tokens if word.isalnum()]
-                tokens = [word for word in tokens if word not in stop_words]
-                return " ".join(tokens)
+#             def preprocess_text(text):
+#                 if pd.isnull(text):
+#                     return ""
+#                 tokens = word_tokenize(str(text).lower())
+#                 tokens = [lemmatizer.lemmatize(word) for word in tokens if word.isalnum()]
+#                 tokens = [word for word in tokens if word not in stop_words]
+#                 return " ".join(tokens)
     
-# Preprocesa las descripciones
-            dfre5 = pd.DataFrame()
-            dfre5['processed_description'] = dfre['description'].apply(preprocess_text)
+# # Preprocesa las descripciones
+#             dfre5 = pd.DataFrame()
+#             dfre5['processed_description'] = dfre['description'].apply(preprocess_text)
 
-# Vectoriza las descripciones preprocesadas
-            vectorizer = TfidfVectorizer()
-            tfidf_matrix = vectorizer.fit_transform(dfre5['processed_description'])
+# # Vectoriza las descripciones preprocesadas
+#             vectorizer = TfidfVectorizer()
+#             tfidf_matrix = vectorizer.fit_transform(dfre5['processed_description'])
 
-# Calcula la matriz de similitud de coseno
-            similarity_matrix = cosine_similarity(tfidf_matrix, tfidf_matrix)
+# # Calcula la matriz de similitud de coseno
+#             similarity_matrix = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-# Define la función de recomendación
-            def get_recommendations(movie_titles, similarity_matrix, df):
-                sim_scores_suma = [0] * len(df)
-                for movie_title in movie_titles:
-                    idx = df.index[df['title'] == movie_title].tolist()[0]
-                    sim_scores = list(enumerate(similarity_matrix[idx]))
-                    for i, score in sim_scores:
-            #if i != idx:  # Omitir la película misma
-                        sim_scores_suma[i] += score
+# # Define la función de recomendación
+#             def get_recommendations(movie_titles, similarity_matrix, df):
+#                 sim_scores_suma = [0] * len(df)
+#                 for movie_title in movie_titles:
+#                     idx = df.index[df['title'] == movie_title].tolist()[0]
+#                     sim_scores = list(enumerate(similarity_matrix[idx]))
+#                     for i, score in sim_scores:
+#             #if i != idx:  # Omitir la película misma
+#                         sim_scores_suma[i] += score
     
-                numero_movies = len(movie_titles)
-                sim_scores_media = [score / numero_movies for score in sim_scores_suma]
+#                 numero_movies = len(movie_titles)
+#                 sim_scores_media = [score / numero_movies for score in sim_scores_suma]
     
 
-                for i in range(len(df)):
-                    df.at[i, 'Puntuacion_des'] = sim_scores_media[i]
+#                 for i in range(len(df)):
+#                     df.at[i, 'Puntuacion_des'] = sim_scores_media[i]
         
-                return df
+#                 return df
 
 
-            if (dfme['Rating'] == 5).any():
-                peliculas_5 = dfme.loc[dfme['Rating'] == 5, 'title'].tolist()
-                if len(peliculas_5) == 1:
-                    movie_title = peliculas_5[0]
-                    dfre['Puntuacion_des'] = 0
-                    dfre['Puntuacion_des'] = dfre['Puntuacion_des'].astype(float)
-                    recommendations = get_recommendations([movie_title], similarity_matrix, dfre)
-                else:
-                    dfre['Puntuacion_des'] = 0
-                    dfre['Puntuacion_des'] = dfre['Puntuacion_des'].astype(float)
-                    recommendations = get_recommendations(peliculas_5, similarity_matrix, dfre) 
+#             if (dfme['Rating'] == 5).any():
+#                 peliculas_5 = dfme.loc[dfme['Rating'] == 5, 'title'].tolist()
+#                 if len(peliculas_5) == 1:
+#                     movie_title = peliculas_5[0]
+#                     dfre['Puntuacion_des'] = 0
+#                     dfre['Puntuacion_des'] = dfre['Puntuacion_des'].astype(float)
+#                     recommendations = get_recommendations([movie_title], similarity_matrix, dfre)
+#                 else:
+#                     dfre['Puntuacion_des'] = 0
+#                     dfre['Puntuacion_des'] = dfre['Puntuacion_des'].astype(float)
+#                     recommendations = get_recommendations(peliculas_5, similarity_matrix, dfre) 
 
             dfre = dfre[~dfre['title'].isin(dfme['title'])]
             dfre = dfre.copy()
 
             def calcular_puntuacion(row):
                 if row["type"] == "MOVIE":
-                    if 'Puntuacion_des' in dfre.columns and dfre['Puntuacion_des'].max() != 0:
-                        return (
-                            0.63 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min())+
-                            0.10 * row["Puntuaciond"] / dfre["Puntuaciond"].max() +
-                            0.06 * row["Puntuacionac"] / dfre["Puntuacionac"].max() +
-                            0.10 * row['Puntuacion_des'] / dfre['Puntuacion_des'].max() +
-                            0.11 * (row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
-            )
-                    else:
+                       
                         return (
                             0.66 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
                             0.15 * row["Puntuaciond"] / dfre["Puntuaciond"].max() +
@@ -261,14 +253,6 @@ def ml_app():
                             0.12 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
             )
                 else:
-                    if 'Puntuacion_des' in dfre.columns and dfre['Puntuacion_des'].max() != 0:
-                        return (
-                            0.64 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
-                            0.13 * row["Puntuacionac"] / dfre["Puntuacionac"].max() +
-                            0.11 * row['Puntuacion_des'] / dfre['Puntuacion_des'].max() +
-                            0.12 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
-            )
-                    else:
                         return (
                             0.7 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
                             0.16 * row["Puntuacionac"] / dfre["Puntuacionac"].max()+
