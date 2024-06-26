@@ -80,7 +80,7 @@ def ml_app():
                     usuario_pesos[genero] = 0.0000
 
             factor_penalizacion = 0.85
-            umbral_penalizacion = usuario_pesos.sort_values(ascending=False).iloc[3] 
+            umbral_penalizacion = usuario_pesos.sort_values(ascending=False).iloc[2] 
             usuario_pesos_penalizados = usuario_pesos.apply(lambda x: (x - umbral_penalizacion) * factor_penalizacion if x < umbral_penalizacion else x)
             datos = []
             for row in dfre['genres'].dropna().values:
@@ -254,9 +254,9 @@ def ml_app():
             )
                 else:
                         return (
-                            0.87 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
+                            0.80 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
                             0.11 * row["Puntuacionac"] / dfre["Puntuacionac"].max()+
-                            0.06 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
+                            0.09 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
             )
 
             dfre["Puntuacion"] = dfre.apply(calcular_puntuacion, axis=1)
