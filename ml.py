@@ -255,8 +255,8 @@ def ml_app():
                 else:
                         return (
                             0.81 * (row['Puntuacionge'] - dfre['Puntuacionge'].min()) / (dfre['Puntuacionge'].max() - dfre['Puntuacionge'].min()) +
-                            0.11 * row["Puntuacionac"] / dfre["Puntuacionac"].max()+
-                            0.08 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
+                            0.14 * row["Puntuacionac"] / dfre["Puntuacionac"].max()+
+                            0.05 *(row['imdb_score'] - dfre['imdb_score'].min()) / (dfre['imdb_score'].max() - dfre['imdb_score'].min())
             )
 
             dfre["Puntuacion"] = dfre.apply(calcular_puntuacion, axis=1)
