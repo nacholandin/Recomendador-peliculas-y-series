@@ -9,7 +9,7 @@ from module.recomendador_func import *
 def ml_app():
     
     st.subheader(body = "RECOMENDADOR")
-    st.write("En esta sección puedes comprobar como funciona el recomendador, tienes que valorar un mínimo de 5 peliculas o series con una puntación entre 1-5.")
+    st.write("En esta sección puedes comprobar como funciona el recomendador, tienes que valorar un mínimo de 5 peliculas o series con el título en inglés (EEUU) con una puntación entre 1-5.")
     df = read_reco()
 
     if 'valoraciones_df' not in st.session_state:

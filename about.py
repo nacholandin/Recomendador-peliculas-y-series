@@ -17,7 +17,7 @@ def about_app():
     
     st.markdown("Raquel García Tajes: Junior Data Scientist | Especialista en Inteligencia Artificial, Python, SQL y Machine Learning | Docente en Educación Primaria.")
     
-    st.markdown("Ignacio Landín García: Junior Data Scientist | Especialista en Inteligencia Artificial, Python, SQL y Machine Learning |Contable.")
+    st.markdown("Ignacio Landín García: Junior Data Scientist | Especialista en Inteligencia Artificial, Python, SQL y Machine Learning | Contable.")
 
 if __name__ == "__about_app__":
     about_app()
