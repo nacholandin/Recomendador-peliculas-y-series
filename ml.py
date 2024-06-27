@@ -87,9 +87,9 @@ def ml_app():
                 categorias_peliculas = []
                 row_generos = row.strip("[]").replace("'", "").replace('"', "").split(", ")
                 row_generos = [g.strip().lower() for g in row_generos]
-            for cat in categorias_unicas:
-                categorias_peliculas.append(int(cat in row_generos))
-            datos.append(categorias_peliculas)
+                for cat in categorias_unicas:
+                    categorias_peliculas.append(int(cat in row_generos))
+                datos.append(categorias_peliculas)
 
 
             df_generos_peliculas = pd.DataFrame(data=datos, columns=list(categorias_unicas))
