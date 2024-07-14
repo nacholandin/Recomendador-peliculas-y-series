@@ -16,9 +16,20 @@ def eda_app():
 
     st.sidebar.markdown("*"*10)
     
-    st.sidebar.markdown("Selecciona `type`, `platform` y `genres` para explorar los datos y las gráficas.")
+    st.sidebar.markdown("Selecciona `type`, `platform`, `genres` y `directors` para explorar los datos y las gráficas.")
 
     df = read_eda()
+
+    # # fig1
+
+    fig1 = px.histogram(data_frame = df,
+             x          = "type",
+             title      = 'TYPES',
+             color      = "type",
+             nbins      = 50)
+    
+    fig1.update_layout()
+    st.plotly_chart(figure_or_data = fig1, use_container_width = True)
 
     # SIDEBAR
     df_sidebar = df.sort_values(by = "release_year").copy()
@@ -62,25 +73,27 @@ def eda_app():
         df_sidebar = df_sidebar[df_sidebar['genres'].apply(lambda x: any(g in genre_type for g in x.split(", ")))]
     
 
+    ## directors
+    directores_unicos = set()
+    for director in df_sidebar['directors'].dropna().values:
+        directores = director.split(", ")
+        directores_unicos.update(directores)
+    directores_unicos = list(directores_unicos)
+
+    directors_options = ["All"] + directores_unicos
+    directors_type = st.sidebar.multiselect(label   = "Select directors:",
+                                         options =  directors_options,
+                                         default = ["All"])
+    if "All" in directors_type:
+        df_sidebar = df_sidebar  # Si "All" está seleccionado, mostrar todos los datos
+    else:
+        df_sidebar = df_sidebar[df_sidebar["directors"].isin(directors_type)]
+    
     df_sidebar.reset_index(drop = True, inplace = True)
     
     with st.expander(label = "DataFrame", expanded = False):
         st.dataframe(df_sidebar)
         st.write(f"DataFrame dimensions: {df_sidebar.shape[0]}x{df_sidebar.shape[1]}")
-
-    
-    col1, col2 = st.columns([1, 1])
-
-    # # fig1
-
-    fig1 = px.histogram(data_frame = df_sidebar,
-             x          = "type",
-             title      = 'TYPES',
-             color      = "type",
-             nbins      = 50)
-    
-    fig1.update_layout()
-
 
      # fig2
 
@@ -216,7 +229,6 @@ def eda_app():
 
     # Plots
 
-    col1.plotly_chart(figure_or_data = fig1, use_container_width = True)
     st.plotly_chart(figure_or_data = fig3, use_container_width = True)
     st.plotly_chart(figure_or_data = fig10, use_container_width = True)
     st.plotly_chart(figure_or_data = fig4, use_container_width = True)

@@ -171,6 +171,8 @@ def read_eda():
 
     df['genres'] = df['genres'].fillna('desconocido')
 
+    #df['directors'] = df['directors'].fillna('desconocido')
+
     df['production_countries'] = df['production_countries'].str.replace(r"[", '').str.replace(r"'", '').str.replace(r"]", '')
     df['production_countries'] = df['production_countries'].replace('', np.nan)
 

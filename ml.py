@@ -11,14 +11,19 @@ def ml_app():
     st.subheader(body = "RECOMENDADOR")
     st.write("En esta sección puedes comprobar como funciona el recomendador, tienes que valorar un mínimo de 5 peliculas o series con el título en inglés (EEUU) con una puntación entre 1-5.")
     df = read_reco()
+    df2 = read_eda()
 
     if 'valoraciones_df' not in st.session_state:
         st.session_state['valoraciones_df'] = pd.DataFrame(columns=["title", "Rating"])
 
     # Lista de películas
     peliculas = list(df["title"].unique())
+    #plataforma = list(df2['platform'].unique())
     
     with st.form(key='rating_form'):
+        # # Selector de plataforma
+        # st.multiselect("Plataforma", options=['All'] + plataforma)
+        
         # Selector de películas
         choice_peliculas = st.selectbox("Película", options=peliculas)
         
